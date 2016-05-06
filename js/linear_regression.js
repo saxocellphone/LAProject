@@ -1,10 +1,11 @@
+//Initialize
+var width = 700;
+var height = 700;
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+var controls;
+
 $(document).ready(function() {
-	//Initialize
-	var width = 700;
-	var height = 700;
-	var scene = new THREE.Scene();
-	var camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-	var controls;
 
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(width, height);
@@ -65,7 +66,7 @@ $(document).ready(function() {
 			}
 		}
 		cArray[cArrayIndex] = tempStr;
-
+		console.log(cArray);
 		//Making the matrix
 		var matrix = createArray(cArray.length, $('.solDiv').length);
 		// for (var row = 0; row < $('.solDiv').length; row++) {
@@ -84,29 +85,53 @@ $(document).ready(function() {
 		var xMatrix = new Array($('.solDiv').length);
 		var yMatrix = new Array($('.solDiv').length);
 		var zMatrix = new Array($('.solDiv').length);
-		for(var k = 0; k < $('.solDiv').length; k++){
+		for(var k = 0; k < $('.solDiv').length; k++){//TODO need to fix for multiples of x
 			xMatrix[k] = parseFloat($('#pair' + (k+1)).find('#x').val());
 			yMatrix[k] = parseFloat($('#pair' + (k + 1)).find('#y').val());
 			zMatrix[k] = parseFloat($('#pair' + (k + 1)).find('#z').val());
 		}
 		var aMatrix = createArray(3,3);
-		var bMatrix = createArray(1,3);
+		var bMatrix = [];
 		aMatrix[0][0] = sum_i(xMatrix, xMatrix);
 		aMatrix[0][1] = aMatrix[1][0] = sum_i(xMatrix, yMatrix);
 		aMatrix[0][2] = aMatrix[2][0] = sum_i(xMatrix, null);
 		aMatrix[2][1] = aMatrix[1][2] = sum_i(null, yMatrix);
 		aMatrix[1][1] = sum_i(yMatrix, yMatrix);
 		aMatrix[2][2] = $('.solDiv').length;
-		bMatrix[0][0] = sum_i(xMatrix, zMatrix);
-		bMatrix[0][1] = sum_i(yMatrix, zMatrix);
-		bMatrix[0][2] = sum_i(zMatrix, null);
-		printMatrix(aMatrix);
-		printMatrix(bMatrix);
+		bMatrix[0] = sum_i(xMatrix, zMatrix);
+		bMatrix[1] = sum_i(yMatrix, zMatrix);
+		bMatrix[2] = sum_i(zMatrix, null);
 
 		var mathAMatrix = math.matrix(aMatrix);
 		var mathBMatrix = math.matrix(bMatrix);
 		var result = math.lusolve(mathAMatrix, math.transpose(mathBMatrix));
-		
+		var C = result._data[0][0];
+		var D = result._data[1][0];
+		var E = result._data[2][0];
+		console.log(result._data);
+		console.log("C: " + C + " D: " + D + " E:" + E);
+
+		var x, y = -10;
+		var vectors = [];
+		vectors[0] = new THREE.Vector3(-10, -10, eval($('#equation').val()));
+		x = 10;
+		vectors[1] = new THREE.Vector3(10, -10, eval($('#equation').val()));
+		y = 10;
+		vectors[2] = new THREE.Vector3(10, 10, eval($('#equation').val()));
+		x = -10;
+		vectors[3] = new THREE.Vector3(-10, 10, eval($('#equation').val()));
+		var plane_obj = new THREE.Mesh(new THREE.PlaneGeometry(20, 20, 1, 1), new THREE.MeshBasicMaterial({
+			 color: 0xddd3af
+		}));
+
+		scene.add(plane_obj);
+		for ( var i = 0, l = plane_obj.geometry.vertices.length; i < l; i ++ ){
+			plane_obj.geometry.vertices[i] = vectors[i];
+		}
+
+		plane_obj.geometry.computeFaceNormals();
+		plane_obj.geometry.computeVertexNormals();
+		render();
 	});
 });
 
