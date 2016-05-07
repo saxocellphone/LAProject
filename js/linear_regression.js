@@ -66,7 +66,6 @@ $(document).ready(function() {
 			}
 		}
 		cArray[cArrayIndex] = tempStr;
-		console.log(cArray);
 		//Making the matrix
 		var matrix = createArray(cArray.length, $('.solDiv').length);
 		// for (var row = 0; row < $('.solDiv').length; row++) {
@@ -85,12 +84,12 @@ $(document).ready(function() {
 		var xMatrix = new Array($('.solDiv').length);
 		var yMatrix = new Array($('.solDiv').length);
 		var zMatrix = new Array($('.solDiv').length);
-		for(var k = 0; k < $('.solDiv').length; k++){//TODO need to fix for multiples of x
-			xMatrix[k] = parseFloat($('#pair' + (k+1)).find('#x').val());
+		for (var k = 0; k < $('.solDiv').length; k++) { //TODO need to fix for multiples of x
+			xMatrix[k] = parseFloat($('#pair' + (k + 1)).find('#x').val());
 			yMatrix[k] = parseFloat($('#pair' + (k + 1)).find('#y').val());
 			zMatrix[k] = parseFloat($('#pair' + (k + 1)).find('#z').val());
 		}
-		var aMatrix = createArray(3,3);
+		var aMatrix = createArray(3, 3);
 		var bMatrix = [];
 		aMatrix[0][0] = sum_i(xMatrix, xMatrix);
 		aMatrix[0][1] = aMatrix[1][0] = sum_i(xMatrix, yMatrix);
@@ -105,32 +104,24 @@ $(document).ready(function() {
 		var mathAMatrix = math.matrix(aMatrix);
 		var mathBMatrix = math.matrix(bMatrix);
 		var result = math.lusolve(mathAMatrix, math.transpose(mathBMatrix));
-		var C = result._data[0][0];
-		var D = result._data[1][0];
-		var E = result._data[2][0];
-		console.log(result._data);
+		var C = result._data[0][0].toFixed(2);
+		var D = result._data[1][0].toFixed(2);
+		var E = result._data[2][0].toFixed(2);
 		console.log("C: " + C + " D: " + D + " E:" + E);
 
-		var x, y = -10;
-		var vectors = [];
-		vectors[0] = new THREE.Vector3(-10, -10, eval($('#equation').val()));
-		x = 10;
-		vectors[1] = new THREE.Vector3(10, -10, eval($('#equation').val()));
-		y = 10;
-		vectors[2] = new THREE.Vector3(10, 10, eval($('#equation').val()));
-		x = -10;
-		vectors[3] = new THREE.Vector3(-10, 10, eval($('#equation').val()));
-		var plane_obj = new THREE.Mesh(new THREE.PlaneGeometry(20, 20, 1, 1), new THREE.MeshBasicMaterial({
-			 color: 0xddd3af
+		var mesh = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshBasicMaterial({
+			color: 0xffff00,
+			side: THREE.DoubleSide
 		}));
+		mesh.geometry.verticesNeedUpdate=true;
 
-		scene.add(plane_obj);
-		for ( var i = 0, l = plane_obj.geometry.vertices.length; i < l; i ++ ){
-			plane_obj.geometry.vertices[i] = vectors[i];
-		}
+		mesh.geometry.vertices[0] = new THREE.Vector3(0,C,0);
+		mesh.geometry.vertices[1] = new THREE.Vector3(10,10*C,10);
+		mesh.geometry.vertices[2] = new THREE.Vector3(0,10*D,10);
+		mesh.geometry.vertices[3] = new THREE.Vector3(10,10*C+10*D,0);
+		scene.add(mesh);
+		console.log(mesh.geometry.vertices);
 
-		plane_obj.geometry.computeFaceNormals();
-		plane_obj.geometry.computeVertexNormals();
 		render();
 	});
 });
@@ -152,31 +143,31 @@ function printMatrix(array) {
 	var rowStr = '';
 	for (var col = 0; col < array[0].length; col++) {
 		for (var row = 0; row < array.length; row++) {
-			rowStr = rowStr + array[row][col]+" ";
+			rowStr = rowStr + array[row][col] + " ";
 		}
 		console.log(rowStr);
 		rowStr = '';
 	}
 }
 
-function sum_i(x, y){
+function sum_i(x, y) {
 	var sum = 0;
-	if(x==null){
+	if (x === null) {
 		x = new Array(y.length);
 		x = fillArraryWithNum(x, 1);
-	} else if(y==null){
+	} else if (y === null) {
 		y = new Array(x.length);
 		y = fillArraryWithNum(y, 1);
 	}
-	for(var i = 0; i < x.length; i++){
-		sum = sum + x[i]*y[i];
+	for (var i = 0; i < x.length; i++) {
+		sum = sum + x[i] * y[i];
 	}
 	return sum;
 }
 
-function fillArraryWithNum(arr, num){
-	for(var i = 0; i < arr.length; i++){
-		arr[i]=num;
+function fillArraryWithNum(arr, num) {
+	for (var i = 0; i < arr.length; i++) {
+		arr[i] = num;
 	}
 	return arr;
 }
