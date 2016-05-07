@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8>
+	<title>Linear Regression</title>
+	<style>
+		body {
+			margin: 0;
+		}
+
+		canvas {
+			width: 100%;
+			height: 100%
+		}
+
+		#addSol {
+			position: absolute;
+			left: 700px;
+		}
+
+		#equation {
+			position: absolute;
+			left: 800px;
+		}
+
+		#graph {
+			position: absolute;
+			left: 700px;
+			top: 500px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r76/three.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js'></script>
+	<script src="../js/vender/OrbitControls.js"></script>
+	<script src="../js/vender/numeric.min.js"></script>
+	<script src='http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.2.1/math.min.js'></script>
+	<script src='../js/linear_regression.js'></script>
+
+	<button id='addSol'>Add a Solution</button>
+	<input id='equation' placeholder='z= (Make sure to put * for multiplication. It wont work without it!)' value='x*C+y*D+E'></input>
+	<button id='graph'>Graph</button>
+</body>
+
+</html>
