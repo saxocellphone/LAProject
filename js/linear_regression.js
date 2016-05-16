@@ -135,19 +135,14 @@ $(document).ready(function() {
     	side: THREE.DoubleSide // do not hide object when viewing from back
 		});
 		scene.add(new THREE.Mesh(geom,material));
-		//Experiments with quaternion
-		// var quaternion = new THREE.Quaternion(1*Math.sin(Math.PI/2/2),0,0,Math.cos(Math.PI/2/2));
-		// //quaternion.setFromAxisAngle(new THREE.Vector3(1,0,0), Math.cos(new THREE.Vector3(D,0,0).angleTo(1,0,0))/2);
-		// mesh.quaternion.multiply(quaternion);
-		// quaternion = new THREE.Quaternion(0,0,1*Math.sin(Math.PI/4/2),Math.cos(Math.PI/4/2));
-		// mesh.quaternion.multiply(quaternion);
-		// quaternion = new THREE.Quaternion(1*Math.sin(-Math.PI/4/2),1*Math.sin(-Math.PI/4/2),0,Math.cos(-Math.PI/4/2));
-		// mesh.quaternion.multiply(quaternion);
-		// quaternion = new THREE.Quaternion(1*Math.sin(Math.PI/4/2),0,0,Math.cos(Math.PI/4/2));
-		// mesh.quaternion.multiply(quaternion);
-		// console.log(new THREE.Vector3(1,1,1).angleTo(new THREE.Vector3(1,0,0))*180/Math.PI);
-		// scene.add(mesh);
-
+		var geometry = new THREE.Geometry();
+    geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    geometry.vertices.push(new THREE.Vector3(C, D, -1));
+		var material = new THREE.LineBasicMaterial({
+			color: 0x0000ff
+		});
+		    var line = new THREE.Line(geometry, material);
+				scene.add(line);
 		render();
 	});
 });
