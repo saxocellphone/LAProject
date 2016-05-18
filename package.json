@@ -1,0 +1,26 @@
+{
+  "name": "la-project",
+  "version": "1.0.0",
+  "description": "Linear Algebra Final Project",
+  "main": "index.js",
+  "dependencies": {
+    "connect": "^3.4.1",
+    "express": "^4.13.4",
+    "mathjs": "^3.2.1",
+    "serve-static": "^1.10.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saxocellphone/LAProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saxocellphone/LAProject/issues"
+  },
+  "homepage": "https://github.com/saxocellphone/LAProject#readme"
+}
