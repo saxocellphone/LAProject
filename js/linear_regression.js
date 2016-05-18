@@ -20,6 +20,7 @@ $(document).ready(function() {
 
 	controls.addEventListener('change', render);
 
+
 	function animate() {
 		window.requestAnimationFrame(animate);
 		controls.update();
@@ -88,6 +89,9 @@ $(document).ready(function() {
 			xMatrix[k] = parseFloat($('#pair' + (k + 1)).find('#x').val());
 			yMatrix[k] = parseFloat($('#pair' + (k + 1)).find('#y').val());
 			zMatrix[k] = parseFloat($('#pair' + (k + 1)).find('#z').val());
+			var point = new THREE.Mesh(new THREE.SphereGeometry(0.25,32,32), new THREE.MeshBasicMaterial({color: 0xff0000}));
+			point.geometry.translate(xMatrix[k],yMatrix[k],zMatrix[k]);
+			scene.add(point);
 		}
 		var aMatrix = createArray(3, 3);
 		var bMatrix = [];
@@ -109,19 +113,36 @@ $(document).ready(function() {
 		var E = result._data[2][0].toFixed(2);
 		console.log("C: " + C + " D: " + D + " E:" + E);
 
-		var mesh = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshBasicMaterial({
+		var mesh = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshBasicMaterial({
 			color: 0xffff00,
 			side: THREE.DoubleSide
 		}));
+		//mesh.geometry.rotateX(Math.PI/180*90);
 		mesh.geometry.verticesNeedUpdate=true;
 
-		mesh.geometry.vertices[0] = new THREE.Vector3(0,C,0);
-		mesh.geometry.vertices[1] = new THREE.Vector3(10,10*C,10);
-		mesh.geometry.vertices[2] = new THREE.Vector3(0,10*D,10);
-		mesh.geometry.vertices[3] = new THREE.Vector3(10,10*C+10*D,0);
-		scene.add(mesh);
-		console.log(mesh.geometry.vertices);
+		var point1 = new THREE.Vector3(0,0,parseFloat(E));
+		var point2 = new THREE.Vector3(0,parseFloat(-E/D),0);
+		var point3 = new THREE.Vector3(parseFloat(-E/C),0,0);
 
+		var geom = new THREE.Geometry();
+		geom.vertices.push(point1);
+		geom.vertices.push(point2);
+		geom.vertices.push(point3);
+		geom.faces.push( new THREE.Face3( 0, 1, 2 ) );
+
+		var material = new THREE.MeshBasicMaterial({
+    	color: 0xffffff, // RGB hex color for material
+    	side: THREE.DoubleSide // do not hide object when viewing from back
+		});
+		scene.add(new THREE.Mesh(geom,material));
+		var geometry = new THREE.Geometry();
+    geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+    geometry.vertices.push(new THREE.Vector3(C, D, -1));
+		var material = new THREE.LineBasicMaterial({
+			color: 0x0000ff
+		});
+		    var line = new THREE.Line(geometry, material);
+				scene.add(line);
 		render();
 	});
 });
